@@ -31,24 +31,31 @@ widths = data['Offsets']
 
 # creating dimensions for each of the widths
 dimen = tuple(zip(columns,map(int,widths)))
+line = ''.join([(field_name).ljust(width) for field_name, width in dimen])
 
 # generating fixed field file by attaching the fields with the corresponding widths to an empty string
-fwf = ''.join([(field_name).ljust(width) for field_name, width in dimen])
+with open('myfile.txt', 'w', encoding='cp1252') as f:
+    f.write(line)
+
+# line in fwf
+
 
 #------------------------------------------
-# running parser on fixed width file
+# Running parser on fixed width file
 #------------------------------------------
 
 # creating a tuple with each of the widths of the fixed width file
 fieldwidths = tuple(map(int,widths))
 parse = parser(fieldwidths)
-fields = parse(fwf)
+fields = parse(line)
 fieldlist = list(fields)
 
 #------------------------------------------
-# writing list to a csv file
+# Writing list to a csv file
 #------------------------------------------
 
-with open('datachall.csv','w',newline='') as f:
-    thewriter = csv.writer(f)
-    thewriter.writerow(fieldlist)
+with open("myfile.txt") as f:
+        for line in f:
+            with open('mycsv.csv', 'w', encoding='utf-8') as csv_file:
+                writer = csv.writer(csv_file, delimiter=',')
+                writer.writerow(list(parse(line)))
